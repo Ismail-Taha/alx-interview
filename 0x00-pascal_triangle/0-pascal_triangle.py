@@ -11,12 +11,13 @@ def pascal_triangle(n):
 
     triangle = []
     if n > 0:
-        for i in range(1, n + 1): # Initialize the first element of the row to 1 (binomial coefficient)
+        for i in range(1, n + 1):
             level = []
             binom_coeff = 1
+# Initialize the first element of the row to 1 (binomial coefficient)
             for j in range(1, i + 1):
                 level.append(binom_coeff)
-            # Calculate the next binomial coefficient i is the row number and j the element
+# Calculate the next binomial coefficient i=the row number and j the element
                 binom_coeff = binom_coeff * (i - j) // j
             triangle.append(level)
     return triangle
