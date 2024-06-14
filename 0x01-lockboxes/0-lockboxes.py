@@ -28,3 +28,4 @@ def canUnlockAll(boxes):
         unlocked_set.update(val)
 
     return True
+
