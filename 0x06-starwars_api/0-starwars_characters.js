@@ -1,17 +1,36 @@
 #!/usr/bin/node
-
 const request = require('request');
 
-request('https://swapi-api.hbtn.io/api/films/' + process.argv[2], function (err, res, body) {
-  if (err) throw err;
-  const actors = JSON.parse(body).characters;
-  exactOrder(actors, 0);
-});
-const exactOrder = (actors, x) => {
-  if (x === actors.length) return;
-  request(actors[x], function (err, res, body) {
-    if (err) throw err;
-    console.log(JSON.parse(body).name);
-    exactOrder(actors, x + 1);
+const filmId = process.argv[2];
+
+const url = 'https://swapi-api.hbtn.io/api/films/' + filmId + '/';
+
+function printMovieCharacters (url) {
+  request(url, async function (error, response, body) {
+    if (error) return console.log('An error occurred');
+
+    const characters = JSON.parse(body).characters;
+    if (!characters) return;
+
+    const promises = [];
+
+    for (const ch of characters) {
+      let promise = null;
+
+      promise = new Promise(function (resolve, reject) {
+        request(ch, function (error, response, body) {
+          if (error) return console.log('Error fetching character');
+          resolve(JSON.parse(body).name);
+        });
+      });
+      promises.push(promise);
+    }
+
+    const data = await Promise.all(promises);
+    for (const item of data) {
+      console.log(item);
+    }
   });
-};
+}
+
+printMovieCharacters(url);
